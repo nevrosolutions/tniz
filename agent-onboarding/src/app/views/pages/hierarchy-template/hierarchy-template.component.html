@@ -1,0 +1,138 @@
+<form class="form-horizontal">
+	<fieldset>
+		<legend>Create Hierarchy</legend>
+
+		<div class="row">
+			<div class="col-md-4">
+				<div class="form-group">
+					<label class="control-label" for="businessUnit">Business Unit</label>
+					<select #businessUnit="ngModel" id="businessUnit" name="businessUnit" class="form-control"
+							[(ngModel)]="selectedBusinessUnit"
+							(ngModelChange)="loadExistingHierarchyNodeTemplate()">
+						<option [ngValue]="undefined" disabled selected>-- SELECT --</option>
+						<option *ngFor="let businessUnit of businessUnits; let i = index"
+								[ngValue]="businessUnit">
+							{{businessUnit.businessChannelName}}
+						</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label class="control-label" for="hierarchyType">Hierarchy Type</label>
+					<select #hierarchyType="ngModel" id="hierarchyType" name="hierarchyType" class="form-control"
+							[(ngModel)]="selectedHierarchyType"
+							(ngModelChange)="loadExistingHierarchyNodeTemplate()">
+						<option [ngValue]="undefined" disabled selected>-- SELECT --</option>
+						<option *ngFor="let hierarchyType of hierarchyTypes"
+								[ngValue]="hierarchyType.value">
+							{{hierarchyType.name}}
+						</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<ng-container *ngIf="selectedBusinessUnit && selectedHierarchyType">
+			<div class="row" style="height: calc(100vh - 393px); overflow-y: auto;">
+				<div class="col-md-2">
+					<div class="example-container">
+						<h5>Designation</h5>
+						<div
+							cdkDropList
+							[cdkDropListData]="designations"
+							[cdkDropListConnectedTo]="[workspace]"
+							[cdkDropListDisabled]="!selectedBusinessUnit || !selectedHierarchyType"
+							class="list"
+							(cdkDropListDropped)="drop($event)">
+							<div class="box designation" *ngFor="let item of designations" cdkDrag>{{item.label}}</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="example-container">
+						<h5>Drag and drop middle</h5>
+
+						<div
+							cdkDropList
+							[cdkDropListData]="workspaceList"
+                            #workspace="cdkDropList"
+							class="list"
+							(cdkDropListDropped)="drop($event)">
+
+							<div class="box " *ngFor="let item of workspaceList; let i = index" cdkDrag>
+								<div *ngIf="item.isDesignation" class="row"
+									 style="padding:5px 10px; box-shadow: 2px 2px 5px -1px rgba(125,124,125,1); background: #dbc5f7;">
+									<div class="col-12">
+										<p style="width:220px" class="pull-left">{{item.label}}</p>
+
+										<mat-icon aria-hidden="false" aria-label="Example delete icon"
+												  class="pull-right"
+												  (click)="deleteItem(item, i)">delete
+										</mat-icon>
+									</div>
+								</div>
+								<div *ngIf="item.isCategory" class="row">
+									<div class="col-12"
+										 style="padding:5px 10px; box-shadow: 2px 2px 5px -1px rgba(125,124,125,1); background: #e2fdd7;">
+										<p style="width:220px;" class="pull-left">{{item.label}}</p>
+										<mat-icon aria-hidden="false" aria-label="Example delete icon"
+												  class="pull-right"
+												  (click)="deleteItem(item, i)">delete
+										</mat-icon>
+									</div>
+								</div>
+							</div>
+						</div>
+						<p *ngIf="showMessage" style="color: red; font-size: 11px">{{message}}</p>
+					</div>
+				</div>
+				<div class="col-md-2">
+
+					<div class="example-container">
+						<h5>Agent Category</h5>
+						<div
+							(cdkDropListDropped)="drop($event)"
+							[cdkDropListConnectedTo]="[workspace]"
+							[cdkDropListData]="categories"
+							[cdkDropListDisabled]="!selectedBusinessUnit || !selectedHierarchyType"
+							cdkDropList
+							class="list">
+							<div class="box agent" *ngFor="let item of categories" cdkDrag>{{item.label}}</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="example-container">
+						<h5>Built Hierarchy Nodes </h5>
+						<div cdkDropList
+							 [cdkDropListData]="builtHierarchyNodeList"
+                             #category="cdkDropList"
+							 class="list"
+							 (cdkDropListDropped)="dropCategory($event)">
+							<div class="box " *ngFor="let item of builtHierarchyNodeList">
+								<p>{{ item.designation.label }}</p>
+								<p>{{ item.agentGroupCategory.label }}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</ng-container>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="text-right">
+					<label class="control-label"></label>
+					<button
+						[ngStyle]="{'cursor': !selectedBusinessUnit || !selectedHierarchyType ? 'no-drop' : 'pointer'}"
+						class="btn btn-primary"
+						(click)="saveHierarchyNodeTemplate()"
+						[disabled]="!selectedBusinessUnit || !selectedHierarchyType">
+						SAVE
+					</button>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+</form>

@@ -1,0 +1,48 @@
+<form class="form-horizontal">
+	<fieldset>
+		<legend>Create Hierarchy</legend>
+
+		<div class="row">
+			<div class="col-md-4">
+				<div class="form-group">
+					<label class="control-label" for="businessUnit">Business Unit</label>
+					<select id="businessUnit" name="businessUnit" class="form-control">
+						<option *ngFor="let businessUnit of businessUnits" [value]="businessUnit?.businessUnitId">
+							{{ businessUnit?.businessChannelName }}
+						</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label class="control-label" for="hierarchyType">Hierarchy Type</label>
+					<select id="hierarchyType" name="hierarchyType" class="form-control">
+						<option value="p">Primary</option>
+						<option value="s">Secondary</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-3">
+				Designation
+			</div>
+			<div class="col-md-6">
+				Drag and drop middle
+			</div>
+			<div class="col-md-3">
+				Category
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group text-right">
+					<label class="control-label" for=""></label>
+					<button id="" name="" class="btn btn-primary">SAVE</button>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+</form>

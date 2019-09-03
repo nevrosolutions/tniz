@@ -1,0 +1,48 @@
+<h1 mat-dialog-title>Edit Individual Hierarchy</h1>
+<mat-dialog-content>
+	<form [formGroup]="editIhFormGroup">
+		<div fxLayout="row wrap">
+			<div fxFlex="50">
+				<mat-form-field>
+					<mat-label>Business Unit</mat-label>
+					<mat-select formControlName="bussinesUnit" (selectionChange)="onChangeDesignation($event)">
+						<mat-option *ngFor="let unit of bussinessUnitArray" [value]="unit.businessUnitId">
+							{{unit.businessChannelName}}</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<div fxFlex="50">
+				<mat-form-field>
+					<input matInput formControlName="effectiveFrom" (click)="picker1.open()" [matDatepicker]="picker1"
+						   placeholder="Effective From">
+					<mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+					<mat-datepicker #picker1></mat-datepicker>
+				</mat-form-field>
+			</div>
+			<div fxFlex="50">
+				<mat-form-field>
+					<mat-label>Designation</mat-label>
+					<mat-select formControlName="designation" (selectionChange)="onChangeDesignation($event)">
+						<mat-option *ngFor="let designation of designationList" [value]="designation.designationId">
+							{{designation.label}}</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<div fxFlex="50">
+				<mat-form-field>
+					<mat-label>Parent</mat-label>
+					<mat-select formControlName="parent">
+						<mat-option *ngFor="let parent of parentlist"
+									[value]="parent.agentSystemId.agentId">{{parent.agentSystemId.printName}}</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+		</div>
+	</form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<button mat-button class="mat-primary" [disabled]="!editIhFormGroup.valid" (click)="updateData()"
+			cdkFocusInitial>Update
+	</button>
+	<button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

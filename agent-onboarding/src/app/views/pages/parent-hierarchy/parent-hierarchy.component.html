@@ -1,0 +1,109 @@
+<form class="form-horizontal">
+	<fieldset>
+		<legend>Create Parent Node</legend>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="form-group">
+					<label class="control-label" for="businessUnit">Business Unit</label>
+					<select #businessUnit="ngModel" id="businessUnit" name="businessUnit" class="form-control"
+							[(ngModel)]="selectedBusinessUnit" (change)="getHierarchyNodeTemplate()">
+						<option [ngValue]="undefined" disabled selected>-- SELECT --</option>
+						<option *ngFor="let businessUnit of businessUnits"
+								[ngValue]="businessUnit.businessUnitId">
+							{{businessUnit.businessChannelName}}
+						</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<ng-container *ngIf="parentHierarchyNodeList">
+			<div class="row">
+				<div class="col-md-2">
+					<div [ngClass]="{'disabled': !isChildSelected}">
+						<div class="example-container">
+							<h3>PARENT</h3>
+							<div
+								cdkDropList
+								[cdkDropListData]="parentHierarchyNodeList"
+								[cdkDropListConnectedTo]="[workspace]"
+								class="list"
+								(cdkDropListDropped)="drop($event)">
+								<div class="box" *ngFor="let item of parentHierarchyNodeList"
+									 cdkDrag (cdkDragDropped)="setDropType('p')">
+									{{item.agentGroupCategory.label}} ({{item.agentGroupCategory.code}})
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="example-container">
+						<div id="datePicker" style="display: none;">
+							<mat-form-field>
+								<input matInput [matDatepicker]="myDatepicker" (dateChange)="dateChanged($event)">
+								<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+								<mat-datepicker #myDatepicker></mat-datepicker>
+							</mat-form-field>
+						</div>
+						<h3>DROP TO CREATE CONNECTION</h3>
+						<div
+							cdkDropList
+							[cdkDropListData]="workspaceList"
+                            #workspace="cdkDropList"
+							class="list"
+							(cdkDropListDropped)="drop($event)">
+							<div class="box" *ngFor="let item of workspaceList; let i = index" cdkDrag>
+								<div *ngIf="i !== 0" class="row">
+									<div class="col-7" style="margin-left: 20px">
+										<p style="font-max-size: 12px; width:500px">{{item.agentGroupCategory.label}}
+											({{item.agentGroupCategory.code}}) -- PARENT</p>
+									</div>
+									<div class="col-3">
+										<mat-icon aria-hidden="false" aria-label="Example delete icon"
+												  (click)="deleteParent(i)">delete
+										</mat-icon>
+									</div>
+								</div>
+								<div *ngIf="isChildSelected && i === 0" class="row">
+									<div class="col-12">
+										<p>{{currentChild.label}} ({{currentChild.code}}) -- CHILD</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2">
+					<div [ngClass]="{'disabled': isChildSelected}">
+						<div class="example-container">
+							<h3>CHILD</h3>
+							<div
+								(cdkDropListDropped)="drop($event)"
+								[cdkDropListConnectedTo]="[workspace]"
+								[cdkDropListData]="parentHierarchyNodeList"
+								cdkDropList
+								class="list">
+								<div class="box" *ngFor="let item of parentHierarchyNodeList"
+									 cdkDrag (cdkDragDropped)="setDropType('c')">
+									{{item.agentGroupCategory.label}} ({{item.agentGroupCategory.code}})
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</ng-container>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group text-right">
+					<label class="control-label"></label>
+					<button
+						class="btn btn-primary"
+						(click)="saveHierarchyParentNode()">
+						SAVE
+					</button>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+</form>

@@ -1,0 +1,99 @@
+<div fxLayout="row wrap">
+	<div fxFlex="90">
+		<mat-card>
+			<mat-card-content>
+				<form [formGroup]="searchFormGroup">
+					<div fxLayout="row wrap">
+						<div fxFlex="40">
+							<mat-form-field>
+								<mat-label>Business Unit</mat-label>
+								<mat-select formControlName="bussinesUnitId">
+									<mat-option *ngFor="let unit of bussinessUnitArray" [value]="unit.businessUnitId">
+										{{unit.businessChannelName}}</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+						<div fxFlex="40">
+							<mat-form-field>
+								<input matInput formControlName="agentId" placeholder="System ID">
+							</mat-form-field>
+						</div>
+						<div fxFlex="20">
+							<button mat-raised-button [disabled]="!searchFormGroup.valid" (click)="getAgentFromAgent()"
+									color="primary">Search
+							</button>
+						</div>
+					</div>
+				</form>
+
+				<ng-container *ngIf="dataSource?.length; else noData">
+					<div fxLayout="row wrap">
+						<div fxFlex="100">
+							<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+								<!-- Effective From Column -->
+								<ng-container matColumnDef="Effective From">
+									<th mat-header-cell *matHeaderCellDef> Effective From</th>
+									<td mat-cell *matCellDef="let element"> {{element.effectiveFrom}} </td>
+								</ng-container>
+								<!-- Effective To Column -->
+								<ng-container matColumnDef="Effective To">
+									<th mat-header-cell *matHeaderCellDef> Effective To</th>
+									<td mat-cell *matCellDef="let element">
+										<span
+											*ngIf="element.effectiveTo != null; else cde">{{element.effectiveTo}}</span>
+										<ng-template #cde>
+											<form [formGroup]="effectiveToFormGroup">
+												<mat-form-field class="pr-0" style="width: 70px !important;">
+													<input matInput [min]="element.effectiveFrom"
+														   formControlName="effectiveTo" (click)="picker.open()"
+														   [matDatepicker]="picker" placeholder="Select Date">
+													<mat-datepicker #picker></mat-datepicker>
+												</mat-form-field>
+											</form>
+										</ng-template>
+									</td>
+								</ng-container>
+								<!-- Effective To Column -->
+								<ng-container matColumnDef="Designation">
+									<th mat-header-cell *matHeaderCellDef> Designation</th>
+									<td mat-cell *matCellDef="let element"> {{element.designationType.label}} </td>
+								</ng-container>
+								<!-- Parent Id Column -->
+								<ng-container matColumnDef="Parent">
+									<th mat-header-cell *matHeaderCellDef> Parent</th>
+									<td mat-cell *matCellDef="let element"> {{element.parentSystemId.printName}} </td>
+								</ng-container>
+								<!-- Bussiness Id Column -->
+								<ng-container matColumnDef="Bussiness Unit">
+									<th mat-header-cell *matHeaderCellDef> Business Unit</th>
+									<td mat-cell *matCellDef="let element"> {{element.businessUnit.businessChannelName}}
+									</td>
+								</ng-container>
+								<!-- Action Column -->
+								<ng-container matColumnDef="Action">
+									<th mat-header-cell *matHeaderCellDef> Action</th>
+									<td mat-cell *matCellDef="let element">
+										<button mat-icon-button (click)="openDialog(element)"
+												[disabled]="element.effectiveTo != null" class="mat-primary">
+											<mat-icon>edit</mat-icon>
+										</button>
+									</td>
+								</ng-container>
+
+								<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+								<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+							</table>
+						</div>
+					</div>
+				</ng-container>
+				<ng-template #noData>
+					<ng-container *ngIf="dataSource">
+						<h4 class="text-center">
+							NO DATA AVAILABLE
+						</h4>
+					</ng-container>
+				</ng-template>
+			</mat-card-content>
+		</mat-card>
+	</div>
+</div>
